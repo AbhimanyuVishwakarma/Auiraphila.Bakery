@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "backend/server.js", "use": "@vercel/node" },
+    { "src": "api/*.js", "use": "@vercel/node" },
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "pages/**/*.html", "use": "@vercel/static" },
     { "src": "admin/**/*.html", "use": "@vercel/static" },
@@ -10,7 +10,8 @@
     { "src": "assets/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "backend/server.js" },
+    { "src": "/api/save-order", "dest": "/api/save-order.js" },
+    { "src": "/api/confirm-order", "dest": "/api/confirm-order.js" },
     { "src": "/pages/(.*)", "dest": "/pages/$1" },
     { "src": "/admin/(.*)", "dest": "/admin/$1" },
     { "src": "/css/(.*)", "dest": "/css/$1" },
