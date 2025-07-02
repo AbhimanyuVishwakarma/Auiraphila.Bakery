@@ -1,5 +1,5 @@
 // Order Handler - Connects checkout process to backend API
-// No direct Supabase connection from frontend to avoid RLS issues
+// Uses API client for flexible backend URL configuration
 
 // Function to save order to database using backend API endpoint
 export async function saveOrderToDatabase(orderData) {
@@ -21,38 +21,14 @@ export async function saveOrderToDatabase(orderData) {
             console.error('Error getting JWT token:', e);
         }
         
-        // Use the backend API endpoint to save the order
-        // Include the JWT token in the Authorization header
-        const response = await fetch('/api/save-order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token ? `Bearer ${token}` : ''
-            },
-            body: JSON.stringify(orderData)
-        });
+        // Use the API client to save the order
+        // The API client will use the configured backend URL
+        const result = await window.apiClient.saveOrder(orderData, token);
         
-        if (!response.ok) {
-            // Try to get error details from response
-            let errorMessage = 'Failed to save order';
-            try {
-                const errorData = await response.json();
-                errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-                // If we can't parse the JSON, use status text
-                errorMessage = `${errorMessage}: ${response.statusText}`;
-            }
-            
-            console.error('Error response from server:', {
-                status: response.status,
-                statusText: response.statusText
-            });
-            
-            throw new Error(errorMessage);
+        if (!result.success) {
+            throw new Error(result.message || 'Failed to save order');
         }
         
-        // Parse the successful response
-        const result = await response.json();
         console.log('Order inserted successfully. Data returned:', result);
         
         // Return the order ID and display ID
@@ -66,5 +42,26 @@ export async function saveOrderToDatabase(orderData) {
     }
 }
 
-// Add a global function to window object for non-module scripts to use
+// Function to send order confirmation email
+export async function sendOrderConfirmation(orderData) {
+    try {
+        console.log('Sending order confirmation email...');
+        
+        // Use the API client to send confirmation email
+        const result = await window.apiClient.confirmOrder(orderData);
+        
+        if (!result.success && !result.message.includes('sent')) {
+            throw new Error(result.message || 'Failed to send order confirmation');
+        }
+        
+        console.log('Order confirmation email sent successfully');
+        return result;
+    } catch (error) {
+        console.error('Error sending order confirmation:', error);
+        throw error;
+    }
+}
+
+// Add global functions to window object for non-module scripts to use
 window.saveOrderToDatabase = saveOrderToDatabase;
+window.sendOrderConfirmation = sendOrderConfirmation;
