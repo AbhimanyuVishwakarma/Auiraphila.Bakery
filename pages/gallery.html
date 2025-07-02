@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="../css/animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="../js/auth.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -16,7 +18,7 @@
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <a href="../index.html"><img src="../logo.png" alt="AuIrphila Bakery Logo"></a>
+            <a href="../index.html"><img src="../assets/images/logo/logo.png" alt="AuIrphila Bakery Logo"></a>
         </div>
         <!-- Desktop Navigation -->
         <nav class="desktop-nav">
@@ -28,6 +30,7 @@
                 <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="contact.html">Contact</a></li>
+               <!-- <li><a href="reviews.html">Reviews</a></li> -->
             </ul>
         </nav>
         <div class="header-right">
@@ -55,6 +58,7 @@
                 <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="contact.html">Contact</a></li>
+               <!-- <li><a href="reviews.html">Reviews</a></li> -->
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="login.html">Account</a></li>
             </ul>
@@ -75,28 +79,28 @@
             <div class="gallery-grid">
                 <!-- Row 1 -->
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../cakepic.jpeg" alt="Delicious Cakes">
+                    <img src="../assets/images/gallery/cakepic.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Delicious Cakes</h3>
                         <p>Our signature cakes for every occasion</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../Cute Cakes.jpeg" alt="Fresh Pastries">
+                    <img src="../assets/images/gallery/Cute Cakes.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Fresh Pastries</h3>
                         <p>Handcrafted with love every morning</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../eighteen.jpg" alt="Artisan Breads">
+                    <img src="../assets/images/gallery/eighteen.jpg">
                     <!-- <div class="gallery-overlay">
                         <h3>Artisan Breads</h3>
                         <p>Freshly baked with premium ingredients</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../Fairytale cafe Athens.jpeg" alt="Homemade Cookies">
+                    <img src="../assets/images/gallery/Fairytale cafe Athens.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Homemade Cookies</h3>
                         <p>Perfect treats for any time of day</p>
@@ -105,28 +109,28 @@
 
                 <!-- Row 2 -->
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../front1.jpeg" alt="Almond Croissant">
+                    <img src="../assets/images/gallery/front1.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Almond Croissant</h3>
                         <p>Flaky pastry filled with almond cream</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../front2.jpeg" alt="Blueberry Muffin">
+                    <img src="../assets/images/gallery/slice5.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Blueberry Muffin</h3>
                         <p>Bursting with fresh blueberries</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../front3.jpeg" alt="Artisan Beverages">
+                    <img src="../assets/images/gallery/front3.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Artisan Beverages</h3>
                         <p>Perfect companions for our baked goods</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../front4.jpeg" alt="Chocolate Cake">
+                    <img src="../assets/images/gallery/front4.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Chocolate Cake</h3>
                         <p>Rich and decadent chocolate indulgence</p>
@@ -135,29 +139,29 @@
 
                 <!-- Row 3 -->
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../party.jpeg" alt="Chocolate Chip Cookies">
+                    <img src="../assets/images/gallery/party.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Chocolate Chip Cookies</h3>
                         <p>Classic cookies with premium chocolate</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../pastry date.jpeg" alt="Butter Croissant">
+                    <img src="../assets/images/gallery/pastry date.jpeg">
                     <!-- <div class="gallery-overlay">
                         <h3>Butter Croissant</h3>
                         <p>Flaky, buttery French classic</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../slice4.jpg" alt="Fresh Bread">
+                    <img src="../assets/images/gallery/slice4.jpg">
                     <!-- <div class="gallery-overlay">
                         <h3>Fresh Bread</h3>
                         <p>Daily baked with traditional methods</p>
                     </div> -->
                 </div>
                 <div class="gallery-item" data-animation="fade-in">
-                    <img src="../slice6.jpg" alt="Special Occasion Cakes">
-                    <!-- <div class="gallery-overlay">
+                    <img src="../assets/images/gallery/slice6.jpg">
+                    <!-- <div class="gallery-overlay"
                         <h3>Special Occasion Cakes</h3>
                         <p>Custom cakes for your celebrations</p>
                     </div> -->
@@ -259,6 +263,7 @@
             });
         });
     </script>
+    <script src="../js/auth-check.js" type="module"></script>
 </body>
 
 </html>

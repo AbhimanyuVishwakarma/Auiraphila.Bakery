@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Test - Auiraphila Bakery</title>
+    <style>
+        /* Test form styles */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-form {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #8b5a2b;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6d4522;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Email preview styles */
+        .email-preview {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+        
+        /* Email template styles */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .email-header {
+            background-color: #8b5a2b;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .email-content {
+            padding: 30px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .thank-you {
+            margin-bottom: 30px;
+        }
+        
+        .order-info {
+            background-color: #f9f5f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        
+        .order-info p {
+            margin: 8px 0;
+        }
+        
+        .order-info strong {
+            color: #8b5a2b;
+        }
+        
+        .order-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        
+        .order-items th {
+            background-color: #8b5a2b;
+            color: #fff;
+            text-align: left;
+            padding: 10px;
+        }
+        
+        .order-items td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-items tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .price-summary {
+            background-color: #f9f5f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .price-row.total {
+            font-weight: bold;
+            font-size: 18px;
+            border-top: 2px solid #ddd;
+            padding-top: 8px;
+            margin-top: 8px;
+            color: #8b5a2b;
+        }
+        
+        .payment-method {
+            background-color: #f9f5f0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+        
+        .email-footer {
+            background-color: #f1e8db;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .email-footer p {
+            margin: 5px 0;
+        }
+        
+        .contact-info {
+            margin-top: 15px;
+        }
+        
+        .social-links {
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: #8b5a2b;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .shipping-note {
+            font-style: italic;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Auiraphila Bakery - Email Test</h1>
+    <p>Use this form to test the order confirmation email functionality.</p>
+    
+    <div class="test-form">
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" value="abhimanyuvishwakarma208@gmail.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" value="Abhimanyu Vishwakarma" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="orderNumber">Order Number:</label>
+            <input type="text" id="orderNumber" value="ORD-2025-41">
+        </div>
+        
+        <div class="form-group">
+            <label for="orderDate">Order Date:</label>
+            <input type="text" id="orderDate" value="July 1, 2025">
+        </div>
+        
+        <div class="form-group">
+            <label for="deliveryDate">Estimated Delivery:</label>
+            <input type="text" id="deliveryDate" value="July 3, 2025">
+        </div>
+        
+        <div class="form-group">
+            <label for="paymentMethod">Payment Method:</label>
+            <select id="paymentMethod">
+                <option value="UPI">UPI</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="Net Banking">Net Banking</option>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="paymentStatus">Payment Status:</label>
+            <select id="paymentStatus">
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Failed">Failed</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="transactionId">Transaction ID:</label>
+            <input type="text" id="transactionId" value="TXN123456789">
+        </div>
+        
+        <h3>Order Items</h3>
+        <div id="orderItems">
+            <div class="order-item" data-index="0">
+                <div class="form-group">
+                    <label>Item Name:</label>
+                    <input type="text" class="item-name" value="Chocolate Truffle Cake">
+                </div>
+                <div class="form-group">
+                    <label>Quantity:</label>
+                    <input type="number" class="item-quantity" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Price (₹):</label>
+                    <input type="number" class="item-price" value="1200">
+                </div>
+            </div>
+        </div>
+        
+        <button id="addItem" style="background-color: #4CAF50; margin-right: 10px;">Add Item</button>
+        <button id="removeItem" style="background-color: #f44336;">Remove Last Item</button>
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <label for="subtotal">Subtotal (₹):</label>
+            <input type="number" id="subtotal" value="1200">
+        </div>
+        
+        <div class="form-group">
+            <label for="tax">GST (5%) (₹):</label>
+            <input type="number" id="tax" value="60">
+        </div>
+        
+        <div class="form-group">
+            <label for="delivery">Delivery Charge (₹):</label>
+            <input type="number" id="delivery" value="100">
+        </div>
+        
+        <div class="form-group">
+            <label for="discount">Discount (₹):</label>
+            <input type="number" id="discount" value="10">
+        </div>
+        
+        <div class="form-group">
+            <label for="totalAmount">Total Amount (₹):</label>
+            <input type="number" id="totalAmount" value="1350">
+        </div>
+        
+        <button id="generatePreview">Generate Email Preview</button>
+        <button id="sendTestEmail">Send Test Email</button>
+    </div>
+    
+    <div id="result" class="result"></div>
+    
+    <div id="emailPreview" class="email-preview" style="display: none;">
+        <div class="email-container">
+            <div class="email-header">
+                <h1>Auiraphila Bakery</h1>
+            </div>
+            
+            <div class="email-content">
+                <div class="greeting">
+                    <p>Hi <span id="preview-customer-name">Abhimanyu Vishwakarma</span>,</p>
+                </div>
+                
+                <div class="thank-you">
+                    <p>Thank you for your order! We're delighted to confirm that we've received your order and are preparing it with care.</p>
+                </div>
+                
+                <div class="order-info">
+                    <p><strong>Order ID:</strong> <span id="preview-order-id">ORD-2025-41</span></p>
+                    <p><strong>Order Date:</strong> <span id="preview-order-date">July 1, 2025</span></p>
+                    <p><strong>Estimated Delivery:</strong> <span id="preview-delivery-date">July 3, 2025</span></p>
+                </div>
+                
+                <h2>Order Details</h2>
+                
+                <table class="order-items">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preview-order-items">
+                        <!-- Order items will be inserted here dynamically -->
+                    </tbody>
+                </table>
+                
+                <div class="price-summary">
+                    <h3>Price Summary</h3>
+                    <div class="price-row">
+                        <span>Subtotal:</span>
+                        <span id="preview-subtotal">₹1200</span>
+                    </div>
+                    <div class="price-row">
+                        <span>GST (5%):</span>
+                        <span id="preview-tax">₹60</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Delivery:</span>
+                        <span id="preview-delivery">₹100</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Discount:</span>
+                        <span id="preview-discount">-₹10</span>
+                    </div>
+                    <div class="price-row total">
+                        <span>Total:</span>
+                        <span id="preview-total">₹1350</span>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <h3>Payment Information</h3>
+                    <p><strong>Payment Method:</strong> <span id="preview-payment-method">UPI</span></p>
+                    <p><strong>Payment Status:</strong> <span id="preview-payment-status">Paid</span></p>
+                    <p><strong>Transaction ID:</strong> <span id="preview-transaction-id">TXN123456789</span></p>
+                </div>
+                
+                <div class="shipping-note">
+                    <p>We'll notify you once your order is shipped!</p>
+                </div>
+            </div>
+            
+            <div class="email-footer">
+                <p>© 2025 Auiraphila Bakery. All rights reserved.</p>
+                <div class="contact-info">
+                    <p>123 Bakery Lane, Mumbai, India</p>
+                    <p>Phone: +91 98765 43210 | Email: contact@auirphilabakery.com</p>
+                </div>
+                <div class="social-links">
+                    <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Function to collect all form data
+        function collectFormData() {
+            const email = document.getElementById('email').value;
+            const fullName = document.getElementById('fullName').value;
+            const orderNumber = document.getElementById('orderNumber').value;
+            const orderDate = document.getElementById('orderDate').value;
+            const deliveryDate = document.getElementById('deliveryDate').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const paymentStatus = document.getElementById('paymentStatus').value;
+            const transactionId = document.getElementById('transactionId').value;
+            const subtotal = parseFloat(document.getElementById('subtotal').value);
+            const tax = parseFloat(document.getElementById('tax').value);
+            const delivery = parseFloat(document.getElementById('delivery').value);
+            const discount = parseFloat(document.getElementById('discount').value);
+            const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+            
+            // Collect order items
+            const items = [];
+            const orderItemElements = document.querySelectorAll('.order-item');
+            
+            orderItemElements.forEach(item => {
+                const name = item.querySelector('.item-name').value;
+                const quantity = parseInt(item.querySelector('.item-quantity').value);
+                const price = parseFloat(item.querySelector('.item-price').value);
+                
+                items.push({
+                    name,
+                    quantity,
+                    price,
+                    total: quantity * price
+                });
+            });
+            
+            return {
+                email,
+                fullName,
+                orderNumber,
+                orderDate,
+                deliveryDate,
+                paymentMethod,
+                paymentStatus,
+                transactionId,
+                items,
+                subtotal,
+                tax,
+                delivery,
+                discount,
+                totalAmount
+            };
+        }
+        
+        // Function to update the preview with form data
+        function updatePreview(data) {
+            document.getElementById('preview-customer-name').textContent = data.fullName;
+            document.getElementById('preview-order-id').textContent = data.orderNumber;
+            document.getElementById('preview-order-date').textContent = data.orderDate;
+            document.getElementById('preview-delivery-date').textContent = data.deliveryDate;
+            document.getElementById('preview-payment-method').textContent = data.paymentMethod;
+            document.getElementById('preview-payment-status').textContent = data.paymentStatus;
+            document.getElementById('preview-transaction-id').textContent = data.transactionId;
+            
+            // Update price summary
+            document.getElementById('preview-subtotal').textContent = `₹${data.subtotal}`;
+            document.getElementById('preview-tax').textContent = `₹${data.tax}`;
+            document.getElementById('preview-delivery').textContent = `₹${data.delivery}`;
+            document.getElementById('preview-discount').textContent = `-₹${data.discount}`;
+            document.getElementById('preview-total').textContent = `₹${data.totalAmount}`;
+            
+            // Update order items
+            const orderItemsContainer = document.getElementById('preview-order-items');
+            orderItemsContainer.innerHTML = '';
+            
+            data.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>₹${item.price}</td>
+                    <td>₹${item.total}</td>
+                `;
+                orderItemsContainer.appendChild(row);
+            });
+            
+            // Show the preview
+            document.getElementById('emailPreview').style.display = 'block';
+        }
+        
+        // Function to calculate totals
+        function calculateTotals() {
+            const orderItemElements = document.querySelectorAll('.order-item');
+            let subtotal = 0;
+            
+            orderItemElements.forEach(item => {
+                const quantity = parseInt(item.querySelector('.item-quantity').value);
+                const price = parseFloat(item.querySelector('.item-price').value);
+                subtotal += quantity * price;
+            });
+            
+            document.getElementById('subtotal').value = subtotal;
+            
+            // Calculate tax (5%)
+            const tax = subtotal * 0.05;
+            document.getElementById('tax').value = tax.toFixed(0);
+            
+            // Get delivery and discount
+            const delivery = parseFloat(document.getElementById('delivery').value);
+            const discount = parseFloat(document.getElementById('discount').value);
+            
+            // Calculate total
+            const total = subtotal + tax + delivery - discount;
+            document.getElementById('totalAmount').value = total.toFixed(0);
+        }
+        
+        // Add item button
+        document.getElementById('addItem').addEventListener('click', function() {
+            const orderItems = document.getElementById('orderItems');
+            const itemCount = document.querySelectorAll('.order-item').length;
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'order-item';
+            newItem.dataset.index = itemCount;
+            newItem.innerHTML = `
+                <div class="form-group">
+                    <label>Item Name:</label>
+                    <input type="text" class="item-name" value="Item ${itemCount + 1}">
+                </div>
+                <div class="form-group">
+                    <label>Quantity:</label>
+                    <input type="number" class="item-quantity" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Price (₹):</label>
+                    <input type="number" class="item-price" value="100">
+                </div>
+                <hr>
+            `;
+            
+            orderItems.appendChild(newItem);
+            
+            // Add event listeners to new inputs
+            const inputs = newItem.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('change', calculateTotals);
+            });
+            
+            calculateTotals();
+        });
+        
+        // Remove item button
+        document.getElementById('removeItem').addEventListener('click', function() {
+            const orderItems = document.getElementById('orderItems');
+            const items = document.querySelectorAll('.order-item');
+            
+            if (items.length > 1) {
+                orderItems.removeChild(items[items.length - 1]);
+                calculateTotals();
+            }
+        });
+        
+        // Add event listeners to all inputs for calculation
+        document.querySelectorAll('.item-quantity, .item-price, #delivery, #discount').forEach(input => {
+            input.addEventListener('change', calculateTotals);
+        });
+        
+        // Generate preview button
+        document.getElementById('generatePreview').addEventListener('click', function() {
+            const data = collectFormData();
+            updatePreview(data);
+        });
+        
+        // Send test email button
+        document.getElementById('sendTestEmail').addEventListener('click', async function() {
+            const data = collectFormData();
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Sending test email...';
+            resultDiv.className = 'result';
+            resultDiv.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/confirm-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `<strong>Success!</strong> ${responseData.message}<br>Check your email inbox (and spam folder) for the confirmation email.`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<strong>Error:</strong> ${responseData.message || 'Failed to send email'}<br>Error details: ${responseData.error || 'Unknown error'}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            }
+        });
+        
+        // Initialize calculations
+        calculateTotals();
+    </script>
+    <script src="js/auth-check.js" type="module"></script>
+</body>
+</html>

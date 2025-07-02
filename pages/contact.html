@@ -84,13 +84,15 @@
             background-color: #45a049;
         }
     </style>
+        <script src="../js/auth.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <a href="../index.html"><img src="../logo.png" alt="AuIrphila Bakery Logo"></a>
+            <a href="../index.html"><img src="../assets/images/logo/logo.png" alt="AuIrphila Bakery Logo"></a>
         </div>
         <!-- Desktop Navigation -->
         <nav class="desktop-nav">
@@ -101,6 +103,7 @@
                 <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="contact.html" class="active">Contact</a></li>
+               <!-- <li><a href="reviews.html">Reviews</a></li> -->
             </ul>
         </nav>
         <div class="header-right">
@@ -128,6 +131,7 @@
                 <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="contact.html">Contact</a></li>
+               <!-- <li><a href="reviews.html">Reviews</a></li> -->
                 <li><a href="login.html">Account</a></li>
                 <li><a href="cart.html">Cart</a></li>
             </ul>
@@ -269,7 +273,7 @@
                 <h3>AuIrphila Bakery</h3>
                 <p>Delicious treats made fresh daily with premium ingredients and love.</p>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                 </div>
@@ -287,7 +291,7 @@
                 </ul>
             </div>
 
-            <div class="footer-column">
+            <div class="contact-card">
                 <h3>Contact Us</h3>
                 <div class="contact-item">
                     <i class="fas fa-map-marker-alt"></i>
@@ -317,11 +321,6 @@
         </div>
     </footer>
 
-    <!-- Additional Copyright Text -->
-    <div class="bottom-copyright">
-        <p>&copy; 2023 AuIrphila Bakery. All Rights Reserved.</p>
-    </div>
-
     <!-- Cart Notification -->
     <div class="cart-notification">
         <p>Item added to cart!</p>
@@ -330,56 +329,10 @@
     <!-- Scripts -->
     <script src="../js/main.js"></script>
     <script src="../js/cart.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const contactForm = document.getElementById('contactForm');
-            const successModal = document.getElementById('successModal');
-            const closeModalButtons = document.querySelectorAll('.close-modal, .close-success');
-
-            // Form submission handler
-            contactForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                // Show success modal
-                successModal.classList.remove('hidden');
-
-                // Optional: Reset the form
-                contactForm.reset();
-
-                // You can uncomment this section if you want to actually submit the form data
-                /*
-                const formData = new FormData(contactForm);
-                
-                fetch('https://script.google.com/macros/s/AKfycbwK2SnqT3NJYkaR7FnDAMgRI-G25MPjWych9XsmSaV-XAaxe67zgj8oVubK0m17teQA/exec', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(result => {
-                    console.log('Success:', result);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-                */
-            });
-
-            // Close modal when clicking close button or outside the modal
-            closeModalButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    successModal.classList.add('hidden');
-                });
-            });
-
-            // Close modal when clicking outside of it
-            window.addEventListener('click', function (event) {
-                if (event.target === successModal) {
-                    successModal.classList.add('hidden');
-                }
-            });
-        });
-    </script>
+    
+    <!-- Import Supabase JS from CDN -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"></script>
+    <script type="module" src="../js/contact.js"></script>
 
     <!-- Commented out previous scripts -->
     <!-- <script>
@@ -411,6 +364,7 @@
             });
         });
     </script> -->
+    <script src="../js/auth-check.js" type="module"></script>
 </body>
 
 </html>

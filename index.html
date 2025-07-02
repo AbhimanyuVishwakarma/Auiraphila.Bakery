@@ -24,9 +24,8 @@
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <a href="index.html"><img src="logo.png" alt="AuIrphila Bakery Logo"></a>
+            <a href="index.html"><img src="assets/images/logo/logo.png" alt="AuIrphila Bakery Logo"></a>
         </div>
-        <!-- Desktop Navigation -->
         <!-- Desktop Navigation -->
         <nav class="desktop-nav">
             <!-- Desktop navigation -->
@@ -35,9 +34,9 @@
                 <li><a href="pages/categories.html">Categories</a></li>
                 <li><a href="pages/gallery.html">Gallery</a></li>
                 <li><a href="pages/speciality-cakes.html">Speciality-cakes</a></li>
-                <!-- Changed from coupons.html to orders.html -->
                 <li><a href="pages/about.html">About Us</a></li>
                 <li><a href="pages/contact.html">Contact</a></li>
+                <!-- <li><a href="pages/reviews.html">Reviews</a></li> -->
             </ul>
         </nav>
         <div class="header-right">
@@ -77,7 +76,7 @@
     <section class="hero-slider">
         <div class="slider-container">
             <div class="slide maintain-ratio active">
-                <img src="thirdslider.jpg" alt="mango items">
+                <img src="assets/images/Banners/thirdslider.jpg" alt="mango items">
                 <div class="slide-content">
                     <h3>Spoonfuls of Mango Magic!!</h3>
                     <p>Pick from our sweet range of seasonal desserts</p>
@@ -88,7 +87,7 @@
                 </div>
             </div>
             <div class="slide">
-                <img src="specialoccasioncakes.jpg" alt="Special Occasion Cakes">
+                <img src="assets/images/Banners/specialoccasioncakes.jpeg" alt="Special Occasion Cakes">
                 <div class="slide-content">
                     <h3>Special Occasion Cakes</h3>
                     <p>Celebrate your special moments with our custom-designed cakes</p>
@@ -99,7 +98,7 @@
                 </div>
             </div>
             <div class="slide">
-                <img src="special season cakes.jpg" alt="Special season cakes">
+                <img src="assets/images/Banners/special season cakes.jpg" alt="Special season cakes">
                 <div class="slide-content">
                     <h3>Slice into mango bliss!</h3>
                     <p>Explore our range of mango special cakes</p>
@@ -125,7 +124,7 @@
         <div class="products-container">
             <div class="product-card">
                 <div class="product-image">
-                    <img src="cholcate cake.jpeg" alt="Chocolate Cake">
+                    <img src="assets/images/products/cholcate cake.jpeg" alt="Chocolate Cake">
                 </div>
                 <div class="product-info">
                     <h3>Chocolate Truffle Cake</h3>
@@ -137,7 +136,7 @@
             </div>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="crositan.jpeg" alt="Croissant">
+                    <img src="assets/images/products/crositan.jpeg" alt="Croissant">
                 </div>
                 <div class="product-info">
                     <h3>Butter Croissant</h3>
@@ -149,7 +148,7 @@
             </div>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="Sourdough Bread.jpeg" alt="Sourdough Bread">
+                    <img src="assets/images/products/Sourdough Bread.jpeg" alt="Sourdough Bread">
                 </div>
                 <div class="product-info">
                     <h3>Artisan Sourdough</h3>
@@ -161,7 +160,7 @@
             </div>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="cholcate chip cookies.jpeg" alt="Chocolate Chip Cookies">
+                    <img src="assets/images/products/cholcate chip cookies.jpeg" alt="Chocolate Chip Cookies">
                 </div>
                 <div class="product-info">
                     <h3>Chocolate Chip Cookies</h3>
@@ -174,7 +173,7 @@
             <!-- New Products Added Below -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="pages/blueberry muffin.jpeg" alt="Blueberry Muffin">
+                    <img src="pages/category/blueberry muffin.jpeg" alt="Blueberry Muffin">
                 </div>
                 <div class="product-info">
                     <h3>Blueberry Muffin</h3>
@@ -401,11 +400,13 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/supabase.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/main.js"></script>
     <script src="js/slider.js"></script>
-    <script src="js/cart.js"></script>
-
-    <script>
+    <script src="js/auth-check.js" type="module"></script>
+    <script type="module">
         document.addEventListener('DOMContentLoaded', function () {
             // Check if user is coming from login page
             const urlParams = new URLSearchParams(window.location.search);

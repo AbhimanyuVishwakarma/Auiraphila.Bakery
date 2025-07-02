@@ -1,5 +1,151 @@
 // Main JavaScript for AuIrphila Bakery
 
+// Supabase client will be loaded from a separate script tag
+
+// Authentication check on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuth();
+});
+
+// Check if user is authenticated and update UI accordingly
+async function checkAuth() {
+    try {
+        // Get current user session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        // Get current page path
+        const currentPath = window.location.pathname;
+        const isLoginPage = currentPath.includes('/login.html');
+        const isSignupPage = currentPath.includes('/signup.html');
+        const isAuthPage = isLoginPage || isSignupPage;
+        
+        // If user is authenticated
+        if (session && session.user) {
+            // If on login or signup page, redirect to home
+            if (isAuthPage) {
+                window.location.href = currentPath.includes('/pages/') ? '../index.html' : 'index.html';
+                return;
+            }
+            
+            // Update UI for logged-in state
+            updateUIForLoggedInUser(session.user);
+        } 
+        // If user is not authenticated
+        else {
+            // Always redirect to login page if not on login or signup page
+            if (!isAuthPage) {
+                if (currentPath.includes('/pages/')) {
+                    window.location.href = 'login.html';
+                } else {
+                    window.location.href = 'pages/login.html';
+                }
+                return;
+            }
+            
+            // Update UI for logged-out state
+            updateUIForLoggedOutUser();
+        }
+    } catch (error) {
+        console.error('Authentication check error:', error.message);
+    }
+}
+
+// Update UI elements for logged-in user
+function updateUIForLoggedInUser(user) {
+    // Find all login buttons/links
+    const loginButtons = document.querySelectorAll('.user-account a[href*="login"]');
+    
+    // Update login buttons to logout
+    loginButtons.forEach(button => {
+        // Change href to # (will be handled by event listener)
+        button.setAttribute('href', '#');
+        
+        // Change text content if it exists
+        const textNode = Array.from(button.childNodes).find(node => 
+            node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+        if (textNode && textNode.textContent.trim().toLowerCase().includes('login')) {
+            textNode.textContent = 'Logout';
+        }
+        
+        // Change icon if it exists
+        const icon = button.querySelector('i.fa-user');
+        if (icon) {
+            icon.classList.remove('fa-user');
+            icon.classList.add('fa-sign-out-alt');
+        }
+        
+        // Add logout event listener
+        button.addEventListener('click', handleLogout);
+    });
+    
+    // Display user email or name if available
+    const userDisplayElements = document.querySelectorAll('.user-display, .user-name');
+    if (userDisplayElements.length > 0) {
+        // Get user display name (email or name if available)
+        const displayName = user.user_metadata?.full_name || user.email;
+        
+        userDisplayElements.forEach(element => {
+            element.textContent = displayName;
+            element.classList.remove('hidden');
+        });
+    }
+}
+
+// Update UI elements for logged-out user
+function updateUIForLoggedOutUser() {
+    // Find all logout buttons and convert to login
+    const logoutButtons = document.querySelectorAll('.user-account a[href="#"]');
+    
+    logoutButtons.forEach(button => {
+        // Change href to login page
+        if (window.location.pathname.includes('/pages/')) {
+            button.setAttribute('href', 'login.html');
+        } else {
+            button.setAttribute('href', 'pages/login.html');
+        }
+        
+        // Change text content if it exists
+        const textNode = Array.from(button.childNodes).find(node => 
+            node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+        if (textNode && textNode.textContent.trim().toLowerCase().includes('logout')) {
+            textNode.textContent = 'Login';
+        }
+        
+        // Change icon if it exists
+        const icon = button.querySelector('i.fa-sign-out-alt');
+        if (icon) {
+            icon.classList.remove('fa-sign-out-alt');
+            icon.classList.add('fa-user');
+        }
+        
+        // Remove logout event listener
+        button.removeEventListener('click', handleLogout);
+    });
+}
+
+// Handle logout action
+async function handleLogout(e) {
+    e.preventDefault();
+    
+    try {
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+            throw error;
+        }
+        
+        // Redirect to login page after logout
+        if (window.location.pathname.includes('/pages/')) {
+            window.location.href = 'login.html';
+        } else {
+            window.location.href = 'pages/login.html';
+        }
+    } catch (error) {
+        console.error('Logout error:', error.message);
+        alert('Error logging out: ' + error.message);
+    }
+}
+
 // Discount Pop-up Functionality
 document.addEventListener('DOMContentLoaded', function() {
     const discountPopup = document.getElementById('discount-popup');
@@ -17,13 +163,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Close the popup when the claim button is clicked
-    claimButton.addEventListener('click', function() {
-        discountPopup.classList.remove('show');
-        
-        // Optional: You could redirect to a specific page or apply the discount
-        // window.location.href = 'pages/categories.html';
-    });
+    if (claimButton) {
+        claimButton.addEventListener('click', function() {
+            discountPopup.classList.remove('show');
+            
+            // Optional: You could redirect to a specific page or apply the discount
+            // window.location.href = 'pages/categories.html';
+        });
+    }
 });
+
 
 // Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', function() {
@@ -446,3 +595,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// After successful login, before redirect:
+const welcomePopup = document.getElementById('welcomePopup');
+if (welcomePopup) {
+    welcomePopup.classList.add('active');
+}

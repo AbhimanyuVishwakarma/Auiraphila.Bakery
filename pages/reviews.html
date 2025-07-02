@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Happy Customers - AuIrphila Bakery</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/reviews.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        /* Modern Reviews Page Styles */
+        :root {
+            --primary-color: #e67e22;
+            --secondary-color: #e74c3c;
+            --accent-color: #f1c40f;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --white: #ffffff;
+            --gray: #f5f5f5;
+            --text-muted: #777;
+            --border-radius: 16px;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.12);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f9f9f9 0%, #f0f2f5 100%);
+            color: var(--dark-color);
+            line-height: 1.7;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+            margin: -2rem -1.5rem 4rem;
+            padding: 5rem 1rem;
+            background: var(--gradient);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(230, 126, 34, 0.2);
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.6;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .page-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .page-header p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 1rem auto 0;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            line-height: 1.8;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin: 5rem 0;
+            position: relative;
+        }
+        
+        .reviews-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(230, 126, 34, 0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .reviews-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(231, 76, 60, 0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+            animation: float 8s ease-in-out 2s infinite reverse;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--dark-color);
+            margin: 0 auto 3rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            padding: 0 2rem 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            animation: lineExtend 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .section-title::before {
+            left: 0;
+            width: 20%;
+            transform-origin: left;
+        }
+        
+        .section-title::after {
+            right: 0;
+            width: 60%;
+            transform-origin: right;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin: 4rem 0;
+            perspective: 1000px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(30px) rotateY(10deg);
+            animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid #eee;
+        }
+        
+        .review-card:nth-child(2) { animation-delay: 0.1s; }
+        .review-card:nth-child(3) { animation-delay: 0.2s; }
+        .review-card:nth-child(4) { animation-delay: 0.3s; }
+        .review-card:nth-child(5) { animation-delay: 0.4s; }
+        .review-card:nth-child(6) { animation-delay: 0.5s; }
+        
+        .review-card::before {
+            content: '\201C';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 8rem;
+            font-family: Georgia, serif;
+            color: rgba(0,0,0,0.03);
+            line-height: 1;
+            z-index: -1;
+            transition: var(--transition);
+        }
+        
+        .review-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .review-card:hover::before {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-right: 1rem;
+            text-transform: uppercase;
+        }
+
+        .reviewer-info h4 {
+            margin: 0 0 0.3rem 0;
+            font-size: 1.1rem;
+            color: var(--dark-color);
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .rating {
+            color: var(--accent-color);
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .rating i {
+            margin-right: 2px;
+        }
+
+        .review-text {
+            color: #555;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        /* Add Review Form */
+        .add-review {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin: 0.5rem 0;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 1.8rem;
+            color: #ddd;
+            cursor: pointer;
+            padding: 0 3px;
+            transition: var(--transition);
+        }
+
+        .star-rating input:not(:checked) ~ label:hover,
+        .star-rating input:not(:checked) ~ label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #d35400;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Thank You Message */
+        .thank-you {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: #f0f8f0;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+            border: 1px solid #c3e6c3;
+        }
+
+        .thank-you i {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .thank-you h3 {
+            color: #28a745;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-header p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+        <script src="../js/auth.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo">
+            <a href="../index.html"><img src="../assets/images/logo/logo.png" alt="AuIrphila Bakery Logo"></a>
+        </div>
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="reviews.html" class="active">Reviews</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-account">
+                <a href="login.html"><i class="fas fa-user"></i></a>
+            </div>
+            <div class="cart">
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+            </div>
+        </div>
+        <div class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <nav class="mobile-nav">
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="reviews.html" class="active">Reviews</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="login.html">Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Reviews Banner -->
+    <section class="page-banner">
+        <div class="container">
+            <h1>Our Happy Customers</h1>
+            <p class="highlight-text">See what our customers are saying about us</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Reviews Header with Summary -->
+        <div class="reviews-header">
+            <div class="average-rating">
+                <h2>Customer Reviews</h2>
+                <div class="rating-number">4.8</div>
+                <div class="stars">★★★★★</div>
+                <p class="total-reviews">Based on 42 reviews</p>
+            </div>
+        </div>
+
+        <!-- Reviews Filter Section -->
+        <div class="reviews-filter">
+            <div class="filter-options">
+                <button class="filter-btn active">All Reviews</button>
+            </div>
+            <div class="sort-options">
+                <span>Sort by:</span>
+                <select class="sort-select">
+                    <option>Most Recent</option>
+                    <option>Highest Rated</option>
+                    <option>Lowest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Reviews Grid Section -->
+        <section class="reviews-section" id="customer-reviews">
+            
+            <div class="reviews-grid" id="reviewsContainer">
+                <!-- Modern Review Cards -->
+                <div class="review-card animate-fade-in">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">SJ</div>
+                            <div class="reviewer-details">
+                                <h4>Sarah Johnson</h4>
+                                <p class="review-date">June 20, 2025 · New York, NY</p>
+                            </div>
+                        </div>
+                        <div class="review-source">
+                            <i class="fab fa-google" title="Google Review"></i>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        <div class="stars">★★★★★</div>
+                        <div class="verified-badge">
+                            <i class="fas fa-check-circle"></i> Verified Purchase
+                        </div>
+                    </div>
+                    <h3 class="review-title">Absolutely Divine Pastries!</h3>
+                    <p class="review-text">The pastries at AuIrphila Bakery are absolutely divine! The croissants are flaky and buttery, just like in Paris. The staff was incredibly friendly and helped me select the perfect assortment for my brunch. Will definitely be back!</p>
+                    <div class="company-response">
+                        <div class="response-header">
+                            <i class="fas fa-comment-dots"></i> Response from Auiraphila Bakery
+                        </div>
+                        <p>Thank you so much for your kind words, Sarah! We're thrilled that you enjoyed our croissants. We take great pride in our authentic baking techniques. Looking forward to serving you again soon!</p>
+                    </div>
+                </div>
+
+                <div class="review-card animate-fade-in">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">MC</div>
+                            <div class="reviewer-details">
+                                <h4>Michael Chen</h4>
+                                <p class="review-date">June 18, 2025 · Boston, MA</p>
+                            </div>
+                        </div>
+                        <div class="review-source">
+                            <i class="fab fa-facebook" title="Facebook Review"></i>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        <div class="stars">★★★★☆</div>
+                    </div>
+                    <h3 class="review-title">Great Selection, Gets Crowded</h3>
+                    <p class="review-text">Great selection of bread and pastries. The sourdough is my favorite - perfect crust and tangy flavor. The only reason I'm not giving 5 stars is that it can get quite crowded in the mornings, sometimes with a 15-minute wait. Still worth it though!</p>
+                </div>
+
+                <div class="review-card animate-fade-in">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">ER</div>
+                            <div class="reviewer-details">
+                                <h4>Emily Rodriguez</h4>
+                                <p class="review-date">June 15, 2025 · Chicago, IL</p>
+                            </div>
+                        </div>
+                        <div class="review-source">
+                            <i class="fab fa-google" title="Google Review"></i>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        <div class="stars">★★★★★</div>
+                        <div class="verified-badge">
+                            <i class="fas fa-check-circle"></i> Verified Purchase
+                        </div>
+                    </div>
+                    <h3 class="review-title">Best Bakery in Town!</h3>
+                    <p class="review-text">The best bakery in town! Their chocolate chip cookies are to die for. The staff is always friendly and the atmosphere is cozy. I ordered a custom cake for my daughter's birthday and it was not only beautiful but delicious too. Everyone at the party was asking where I got it!</p>
+                    <div class="company-response">
+                        <div class="response-header">
+                            <i class="fas fa-comment-dots"></i> Response from Auiraphila Bakery
+                        </div>
+                        <p>Thank you for the wonderful review, Emily! We're so happy that your daughter's birthday cake was a hit. Our pastry chef will be thrilled to hear your feedback. We look forward to creating more special moments for you!</p>
+                    </div>
+                </div>
+                
+                <div class="review-card animate-fade-in">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">JT</div>
+                            <div class="reviewer-details">
+                                <h4>James Thompson</h4>
+                                <p class="review-date">June 12, 2025 · Austin, TX</p>
+                            </div>
+                        </div>
+                        <div class="review-source">
+                            <i class="fab fa-google" title="Google Review"></i>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        <div class="stars">★★★★★</div>
+                    </div>
+                    <h3 class="review-title">Fresh Bread Daily</h3>
+                    <p class="review-text">I stop by every morning on my way to work for their fresh bread. The multigrain loaf is perfect for sandwiches and stays fresh for days. The staff knows me by name now and always has my order ready. That's the kind of service that keeps me coming back!</p>
+                </div>
+            </div>
+            
+            <!-- Load More Reviews -->
+            <div class="load-more">
+                <a href="all-reviews.html" class="btn btn-outline">Load More Reviews</a>
+            </div>
+        </section>
+
+        <!-- Leave a Review Section -->
+        <section class="leave-review">
+            <h3>Share Your Experience</h3>
+            <p>We value your feedback! Let us know how we're doing and what we can improve.</p>
+            <button class="btn btn-primary">Write a Review</button>
+        </section>
+        
+        <!-- Review Form Modal -->
+        <div id="reviewModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Write a Review</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="reviewForm">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Your Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5" required>
+                                <label for="star5" title="5 stars">★</label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4" title="4 stars">★</label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3" title="3 stars">★</label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2" title="2 stars">★</label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                <label for="star1" title="1 star">★</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reviewTitle">Review Title</label>
+                            <input type="text" id="reviewTitle" class="form-control" placeholder="Summarize your experience" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="review">Your Review</label>
+                            <textarea id="review" class="form-control" rows="5" placeholder="Share your experience with our products and services" required></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline close-modal-btn">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+            
+            <div class="thank-you" id="thankYou">
+                <i class="fas fa-check-circle"></i>
+                <h3>Thank You for Your Review!</h3>
+                <p>We appreciate your feedback and look forward to serving you again soon.</p>
+            </div>
+        </section>
+
+    </div> <!-- Closing container div -->
+</div> <!-- Closing main container div -->
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>AuIrphila Bakery</h3>
+                <p>Delicious treats made fresh daily with premium ingredients and love.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="categories.html">Products</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="contact-card">
+                <h3>Contact Us</h3>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Auirphila Bakery, opposite VM Polytechnic, Narsinghpur.</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>9131688187</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>info@auirphilabakery.com</span>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Newsletter</h3>
+                <p>Subscribe for updates on new products and offers.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email Address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 AuIrphila Bakery. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+    <!-- Cart Notification -->
+    <div class="cart-notification">
+        <p>Item added to cart!</p>
+    </div>
+
+        <!-- Scripts -->
+        <script src="../js/main.js"></script>
+        <script src="../js/cart.js"></script>
+        
+        <!-- Review Form Script -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get modal elements
+                const modal = document.getElementById('reviewModal');
+                const openModalBtn = document.querySelector('.leave-review .btn-primary');
+                const closeModalBtns = document.querySelectorAll('.close-modal, .close-modal-btn');
+                const reviewForm = document.getElementById('reviewForm');
+                const starInputs = document.querySelectorAll('.star-rating input[type="radio"]');
+                
+                // Open modal when clicking "Write a Review" button
+                if (openModalBtn) {
+                    openModalBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        modal.classList.add('show');
+                        // Removed: document.body.style.overflow = 'hidden';
+                    });
+                }
+                
+                // Close modal when clicking close button or outside modal
+                closeModalBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        modal.classList.remove('show');
+                        // Removed: document.body.style.overflow = '';
+                    });
+                });
+                
+                // Close modal when clicking outside modal content
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                        // Removed: document.body.style.overflow = '';
+                    }
+                });
+                
+                // Close modal with Escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && modal.classList.contains('show')) {
+                        modal.classList.remove('show');
+                        // Removed: document.body.style.overflow = '';
+                    }
+                });
+                
+                // Star rating interaction
+                starInputs.forEach(star => {
+                    star.addEventListener('change', function() {
+                        const rating = this.value;
+                        // You can use this value if needed
+                        console.log('Selected rating:', rating);
+                    });
+                });
+                
+                // Form submission
+                if (reviewForm) {
+                    reviewForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        // Get form values
+                        const name = document.getElementById('name').value;
+                        const rating = document.querySelector('input[name="rating"]:checked');
+                        const title = document.getElementById('reviewTitle').value;
+                        const reviewText = document.getElementById('review').value;
+                        
+                        // Simple validation
+                        if (!name || !rating || !title || !reviewText) {
+                            alert('Please fill in all fields');
+                            return;
+                        }
+                        
+                        // Create a new review object
+                        const newReview = {
+                            name,
+                            rating: rating.value,
+                            title,
+                            review: reviewText,
+                            date: new Date().toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            }),
+                            id: Date.now(),
+                            verified: true
+                        };
+                        
+                        // Add the new review to the page
+                        addReviewToPage(newReview);
+                        
+                        // Update the review count
+                        updateReviewCount(1);
+                        
+                        // Store the review in localStorage for all-reviews.html
+                        saveReviewToStorage(newReview);
+                        
+                        // Show thank you message
+                        const thankYou = document.getElementById('thankYou');
+                        if (thankYou) {
+                            thankYou.style.display = 'block';
+                            
+                            // Hide the thank you message after 3 seconds
+                            setTimeout(() => {
+                                thankYou.style.display = 'none';
+                            }, 3000);
+                        }
+                        
+                        // Reset form and close modal
+                        reviewForm.reset();
+                        modal.classList.remove('show');
+                        // Removed: document.body.style.overflow = '';
+                        
+                        // Scroll to the new review
+                        setTimeout(() => {
+                            const newReviewElement = document.getElementById(`review-${newReview.id}`);
+                            if (newReviewElement) {
+                                newReviewElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                newReviewElement.classList.add('highlight-new');
+                                
+                                // Remove highlight after animation
+                                setTimeout(() => {
+                                    newReviewElement.classList.remove('highlight-new');
+                                }, 3000);
+                            }
+                        }, 100);
+                    });
+                }
+            });
+            
+            // Function to add a new review to the page
+            function addReviewToPage(review) {
+                const reviewsContainer = document.getElementById('reviewsContainer');
+                if (!reviewsContainer) return;
+                
+                // Create stars HTML based on rating
+                const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                
+                // Get user initials for avatar
+                const initials = review.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                // Create the review element
+                const reviewElement = document.createElement('div');
+                reviewElement.className = 'review-card animate-fade-in';
+                reviewElement.id = `review-${review.id}`;
+                
+                reviewElement.innerHTML = `
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">${initials}</div>
+                            <div class="reviewer-details">
+                                <h4>${review.name}</h4>
+                                <p class="review-date">${review.date}</p>
+                            </div>
+                        </div>
+                        <div class="review-source">
+                            <i class="fas fa-user-check" title="Verified Customer"></i>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        <div class="stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                        ${review.verified ? '<div class="verified-badge"><i class="fas fa-check-circle"></i> Verified Purchase</div>' : ''}
+                    </div>
+                    <h3 class="review-title">${review.title}</h3>
+                    <p class="review-text">${review.review}</p>
+                `;
+                
+                // Prepend the new review to the container
+                reviewsContainer.prepend(reviewElement);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    reviewElement.style.opacity = 1;
+                }, 10);
+            }
+            
+            // Function to update the review count
+            function updateReviewCount(increment = 1) {
+                const totalReviewsElement = document.querySelector('.total-reviews');
+                if (totalReviewsElement) {
+                    const currentCount = parseInt(totalReviewsElement.textContent.match(/\d+/)[0]);
+                    totalReviewsElement.textContent = `Based on ${currentCount + increment} reviews`;
+                }
+                
+                // In a real app, you would also update the average rating here
+            }
+            
+            // Function to save review to localStorage
+            function saveReviewToStorage(review) {
+                // Get existing reviews from localStorage
+                const existingReviews = JSON.parse(localStorage.getItem('bakeryReviews') || '[]');
+                
+                // Add the new review
+                existingReviews.push(review);
+                
+                // Save back to localStorage
+                localStorage.setItem('bakeryReviews', JSON.stringify(existingReviews));
+                
+                console.log('Review saved to localStorage:', review);
+            }
+        </script>
+        <script>
+            // Animate elements when they come into view
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('.animate-on-scroll, .review-card');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const animation = entry.target.dataset.animation || 'fade-in';
+                            entry.target.classList.add(animation);
+                            entry.target.style.opacity = '1';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                elements.forEach(element => {
+                    element.style.opacity = '0';
+                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(element);
+                });
+            };
+
+            // Run animations when page loads
+            window.addEventListener('load', () => {
+                animateOnScroll();
+            });
+
+            // Handle mobile menu toggle
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            const mobileNav = document.querySelector('.mobile-nav');
+            
+            if (hamburgerMenu) {
+                hamburgerMenu.addEventListener('click', () => {
+                    mobileNav.classList.toggle('active');
+                    hamburgerMenu.classList.toggle('active');
+                });
+            }
+        </script>
+        <script src="../js/reviews.js"></script>
+        <script src="../js/auth-check.js" type="module"></script>
+</body>
+    </html>

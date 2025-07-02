@@ -6,17 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Page - AuIrphila Bakery</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/responsive.css">
-    <link rel="stylesheet" href="../css/animations.css">
     <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="../js/auth.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Email functionality handled by Nodemailer on the backend -->
 </head>
 
 <body>
     <!-- Header Section -->
     <header>
         <div class="logo">
-            <a href="../index.html"><img src="../logo.png" alt="AuIrphila Bakery Logo"></a>
+            <a href="../index.html"><img src="../assets/images/logo/logo.png" alt="AuIrphila Bakery Logo"></a>
         </div>
         <!-- Desktop Navigation -->
         <!-- Desktop Navigation -->
@@ -29,6 +32,7 @@
                 <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="contact.html">Contact</a></li>
+               <!-- <li><a href="reviews.html">Reviews</a></li> -->
             </ul>
         </nav>
 
@@ -59,6 +63,7 @@
                 <li><a href="speciality-cakes.html">Speciality-cakes</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="contact.html">Contact</a></li>
+               <!-- <li><a href="reviews.html">Reviews</a></li> -->
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="login.html">Account</a></li>
             </ul>
@@ -78,6 +83,10 @@
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
                             <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
@@ -276,7 +285,7 @@
                     </section>
 
                     <!-- Place Order Button -->
-                    <button type="submit" id="placeOrderBtn" class="place-order-button">Place Order</button>
+                    <button type="button" id="placeOrderBtn" class="place-order-button">Place Order</button>
                 </div>
             </div>
     </div>
@@ -321,7 +330,7 @@
                 <i class="fas fa-check-circle"></i>
                 <h2>Order Placed Successfully!</h2>
                 <p>Your order has been placed successfully. You will receive a confirmation email shortly.</p>
-                <p>Order #: <strong>ORD-2023-54321</strong></p>
+                <p>Order #: <strong>ORD-2024-54321</strong></p>
                 <button type="button" class="primary-button">Continue Shopping</button>
             </div>
         </div>
@@ -386,9 +395,17 @@
         <p>Item added to cart!</p>
     </div>
 
-    <!-- Scripts -->
+    <!-- Supabase and Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { supabase } from '../js/supabase.js';
+        window.supabase = supabase; // Make supabase available globally
+    </script>
     <script src="../js/main.js"></script>
-    <script src="../js/checkout.js"></script>
+    <script src="../js/order-handler.js" type="module"></script>
+    <script src="../js/order-utils.js" type="module"></script>
+    <script src="../js/email-service.js" type="module"></script>
+    <script src="../js/checkout.js" type="module"></script>
     <script>
         // Animate elements when they come into view
         document.addEventListener('DOMContentLoaded', function () {
@@ -418,11 +435,16 @@
             const shipping = localStorage.getItem('cartShipping') || '₹0.00';
             const total = localStorage.getItem('cartTotal') || '₹0.00';
 
-            // Update the checkout page with the cart totals
-            document.getElementById('checkout-subtotal').textContent = subtotal;
-            document.getElementById('checkout-tax').textContent = tax;
-            document.getElementById('checkout-shipping').textContent = shipping;
-            document.getElementById('checkout-total').textContent = total;
+            // Update the checkout page with the cart totals - with null checks
+            const subtotalElement = document.getElementById('checkout-subtotal');
+            const taxElement = document.getElementById('checkout-tax');
+            const shippingElement = document.getElementById('checkout-shipping');
+            const totalElement = document.getElementById('checkout-total');
+            
+            if (subtotalElement) subtotalElement.textContent = subtotal;
+            if (taxElement) taxElement.textContent = tax;
+            if (shippingElement) shippingElement.textContent = shipping;
+            if (totalElement) totalElement.textContent = total;
         });
     </script>
     <!-- <script>
@@ -441,6 +463,15 @@
             .catch(error => alert('Error: ' + error.message));
         });
       </script> -->
+
+    <script>
+        document.getElementById('placeOrderBtn').addEventListener('click', function() {
+            // Order placement logic handled by backend using Nodemailer
+            // The backend API will handle email sending via Nodemailer
+            console.log('Order placed - emails will be sent via backend Nodemailer');
+        });
+    </script>
+    <script src="../js/auth-check.js" type="module"></script>
 </body>
 
 </html>

@@ -1,0 +1,747 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle Billing Address Section
+    const sameAsBillingCheckbox = document.getElementById('sameAsBilling');
+    const billingSection = document.getElementById('billing-section');
+
+    sameAsBillingCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            billingSection.classList.add('hidden');
+        } else {
+            billingSection.classList.remove('hidden');
+        }
+    });
+
+    // Set default credit card values
+    const cardNumber = document.getElementById('cardNumber');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvv');
+    const nameOnCard = document.getElementById('nameOnCard');
+    
+    // Set default values
+    if (cardNumber) cardNumber.value = '1111 2222 3333 4444';
+    if (expiryDate) expiryDate.value = '12/25'; // Future date
+    if (cvv) cvv.value = '123';
+    if (nameOnCard) nameOnCard.value = 'John Doe';
+
+    // Payment Method Selection
+    const paymentOptions = document.querySelectorAll('.payment-option');
+    const paymentForms = document.querySelectorAll('.payment-form');
+
+    paymentOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            paymentOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            this.classList.add('selected');
+            
+            // Hide all payment forms
+            paymentForms.forEach(form => form.classList.add('hidden'));
+            
+            // Show the selected payment form
+            const paymentType = this.getAttribute('data-payment');
+            document.getElementById(`${paymentType}-payment-form`).classList.remove('hidden');
+            
+            // Update review payment method
+            updateReviewPaymentMethod(paymentType);
+        });
+    });
+    
+    // Initialize first payment option as selected
+    const firstPaymentOption = document.querySelector('.payment-option');
+    if (firstPaymentOption) {
+        const paymentType = firstPaymentOption.getAttribute('data-payment');
+        document.getElementById(`${paymentType}-payment-form`).classList.remove('hidden');
+    }
+    
+    // Promo Code Application
+    const applyPromoButton = document.querySelector('.apply-button');
+    const promoCodeInput = document.getElementById('promoCode');
+
+    if (applyPromoButton && promoCodeInput) {
+        applyPromoButton.addEventListener('click', function() {
+            const promoCode = promoCodeInput.value.trim();
+            if (promoCode) {
+                // Simple validation - in a real app, this would check against valid codes
+                if (promoCode === 'DISCOUNT10') {
+                    // Calculate 10% discount
+                    const subtotalElement = document.querySelector('.subtotal-amount');
+                    if (subtotalElement) {
+                        const subtotalText = subtotalElement.textContent;
+                        const subtotal = parseFloat(subtotalText.replace('₹', ''));
+                        const discountAmount = subtotal * 0.1; // 10% discount
+                        
+                        // Update the order summary
+                        updateOrderSummaryWithDiscount('10% Discount', discountAmount);
+                        
+                        alert('Promo code applied! 10% discount added.');
+                    } else {
+                        console.error('Subtotal element not found');
+                    }
+                } else if (promoCode === 'WEEKEND15') {
+                    // APPLY 200 DISCOUNT
+                    updateOrderSummaryWithDiscount('₹200 Discount', 200.00);
+                    
+                    alert('Promo code applied! ₹200 discount added.');
+                } else {
+                    alert('Invalid promo code. Please try again.');
+                }
+            } else {
+                alert('Please enter a promo code.');
+            }
+        });
+    }
+
+    // Function to update order summary with discount
+    function updateOrderSummaryWithDiscount(discountLabel, discountAmount) {
+        const orderTotals = document.querySelector('.order-totals');
+        const totalRow = document.querySelector('.totals-row.total');
+        
+        if (!orderTotals || !totalRow) {
+            console.error('Order totals or total row not found');
+            return;
+        }
+        
+        // Remove existing discount row if any
+        const existingDiscountRow = document.querySelector('.totals-row.discount');
+        if (existingDiscountRow) {
+            existingDiscountRow.remove();
+        }
+        
+        // Create new discount row
+        const discountRow = document.createElement('div');
+        discountRow.className = 'totals-row discount';
+        discountRow.innerHTML = `
+            <span>${discountLabel}</span>
+            <span>-₹${discountAmount.toFixed(2)}</span>
+        `;
+        
+        // Insert before the total row
+        orderTotals.insertBefore(discountRow, totalRow);
+        
+        // Update the total
+        const subtotalElement = document.querySelector('.subtotal-amount');
+        const shippingElement = document.querySelector('.totals-row.shipping span:last-child');
+        const taxElement = document.querySelector('.totals-row.tax span:last-child');
+        
+        if (!subtotalElement || !shippingElement || !taxElement) {
+            console.error('One or more total elements not found');
+            return;
+        }
+        
+        const subtotal = parseFloat(subtotalElement.textContent.replace('₹', ''));
+        const shipping = parseFloat(shippingElement.textContent.replace('₹', ''));
+        const tax = parseFloat(taxElement.textContent.replace('₹', ''));
+        
+        const newTotal = (subtotal + shipping + tax - discountAmount).toFixed(2);
+        totalRow.querySelector('span:last-child').textContent = `₹${newTotal}`;
+        
+        // Also update the review modal if it exists
+        const reviewTotal = document.querySelector('.review-section p strong');
+        if (reviewTotal) {
+            reviewTotal.textContent = `₹${newTotal}`;
+        }
+    }
+
+    // Add debugging to help identify issues
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Checkout page loaded');
+        
+        // Check if promo code elements exist
+        const applyButton = document.querySelector('.apply-button');
+        const promoInput = document.getElementById('promoCode');
+        
+        console.log('Apply button exists:', !!applyButton);
+        console.log('Promo input exists:', !!promoInput);
+        
+        // Check if order summary elements exist
+        const subtotalElement = document.querySelector('.subtotal-amount');
+        const orderTotals = document.querySelector('.order-totals');
+        const totalRow = document.querySelector('.totals-row.total');
+        
+        console.log('Subtotal element exists:', !!subtotalElement);
+        console.log('Order totals exists:', !!orderTotals);
+        console.log('Total row exists:', !!totalRow);
+        
+        // Add event listener for promo code application
+        if (applyButton && promoInput) {
+            applyButton.addEventListener('click', function() {
+                console.log('Apply button clicked');
+                const promoCode = promoInput.value.trim();
+                console.log('Promo code entered:', promoCode);
+                
+                if (promoCode === 'DISCOUNT10') {
+                    console.log('Valid DISCOUNT10 code entered');
+                    
+                    if (subtotalElement) {
+                        const subtotalText = subtotalElement.textContent;
+                        console.log('Subtotal text:', subtotalText);
+                        
+                        const subtotal = parseFloat(subtotalText.replace('₹', ''));
+                        console.log('Parsed subtotal:', subtotal);
+                        
+                        const discountAmount = subtotal * 0.1;
+                        console.log('Calculated discount:', discountAmount);
+                        
+                        updateOrderSummaryWithDiscount('10% Discount', discountAmount);
+                        alert('Promo code applied! 10% discount added.');
+                    } else {
+                        console.error('Subtotal element not found when applying discount');
+                    }
+                }
+            });
+        }
+    });
+
+    // Form Validation Functions
+    function validateShippingForm() {
+        const requiredFields = [
+            'fullName', 'phone', 'address1', 'city', 'state', 'zipCode', 'country'
+        ];
+        
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            const input = document.getElementById(field);
+            if (!input.value.trim()) {
+                isValid = false;
+                input.classList.add('error');
+            } else {
+                input.classList.remove('error');
+            }
+        });
+        
+        return isValid;
+    }
+    
+    function validateBillingForm() {
+        if (sameAsBillingCheckbox.checked) {
+            return true; // No need to validate if using shipping address
+        }
+        
+        const requiredFields = [
+            'billingFullName', 'billingPhone', 'billingAddress1', 'billingCity', 
+            'billingState', 'billingZipCode', 'billingCountry'
+        ];
+        
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            const input = document.getElementById(field);
+            if (!input.value.trim()) {
+                isValid = false;
+                input.classList.add('error');
+            } else {
+                input.classList.remove('error');
+            }
+        });
+        
+        return isValid;
+    }
+    
+    function validatePaymentForm() {
+        const selectedPayment = document.querySelector('.payment-option.selected');
+        const paymentType = selectedPayment.getAttribute('data-payment');
+        
+        let isValid = true;
+        
+        if (paymentType === 'card') {
+            const cardFields = ['cardNumber', 'expiryDate', 'cvv', 'nameOnCard'];
+            
+            cardFields.forEach(field => {
+                const input = document.getElementById(field);
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('error');
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+        } else if (paymentType === 'upi') {
+            const upiId = document.getElementById('upiId');
+            if (!upiId.value.trim()) {
+                isValid = false;
+                upiId.classList.add('error');
+            } else {
+                upiId.classList.remove('error');
+            }
+        }
+        
+        return isValid;
+    }
+    
+    // Update Review Information
+    function updateReviewShippingAddress() {
+        const fullName = document.getElementById('fullName').value;
+        const address1 = document.getElementById('address1').value;
+        const address2 = document.getElementById('address2').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const zipCode = document.getElementById('zipCode').value;
+        const country = document.getElementById('country').value;
+        
+        let addressText = '';
+        if (fullName && address1 && city && state && zipCode && country) {
+            addressText = `${fullName}<br>${address1}`;
+            if (address2) addressText += `<br>${address2}`;
+            addressText += `<br>${city}, ${state} ${zipCode}<br>${country}`;
+        } else {
+            addressText = 'Please fill in your shipping information';
+        }
+        
+        document.getElementById('reviewShippingAddress').innerHTML = addressText;
+    }
+    
+    function updateReviewBillingAddress() {
+        if (sameAsBillingCheckbox.checked) {
+            document.getElementById('reviewBillingAddress').innerHTML = 'Same as shipping address';
+            return;
+        }
+        
+        const fullName = document.getElementById('billingFullName').value;
+        const address1 = document.getElementById('billingAddress1').value;
+        const address2 = document.getElementById('billingAddress2').value;
+        const city = document.getElementById('billingCity').value;
+        const state = document.getElementById('billingState').value;
+        const zipCode = document.getElementById('billingZipCode').value;
+        const country = document.getElementById('billingCountry').value;
+        
+        let addressText = '';
+        if (fullName && address1 && city && state && zipCode && country) {
+            addressText = `${fullName}<br>${address1}`;
+            if (address2) addressText += `<br>${address2}`;
+            addressText += `<br>${city}, ${state} ${zipCode}<br>${country}`;
+        } else {
+            addressText = 'Please fill in your billing information';
+        }
+        
+        document.getElementById('reviewBillingAddress').innerHTML = addressText;
+    }
+    
+    function updateReviewPaymentMethod(paymentType) {
+        let paymentText = '';
+        
+        switch(paymentType) {
+            case 'card':
+                const cardNumber = document.getElementById('cardNumber').value;
+                if (cardNumber) {
+                    // Show last 4 digits only
+                    const lastFour = cardNumber.slice(-4);
+                    paymentText = `Credit/Debit Card ending in ${lastFour}`;
+                } else {
+                    paymentText = 'Credit/Debit Card';
+                }
+                break;
+            case 'paypal':
+                paymentText = 'PayPal';
+                break;
+            case 'upi':
+                const upiId = document.getElementById('upiId').value;
+                paymentText = upiId ? `UPI (${upiId})` : 'UPI/NetBanking';
+                break;
+            default:
+                paymentText = 'Credit/Debit Card';
+        }
+        
+        document.getElementById('reviewPaymentMethod').textContent = paymentText;
+    }
+    
+    // Review Order Button
+    const reviewOrderBtn = document.getElementById('reviewOrderBtn');
+    const reviewModal = document.getElementById('reviewModal');
+    const closeModalButtons = document.querySelectorAll('.close-modal, .close-review');
+    
+    reviewOrderBtn.addEventListener('click', function() {
+        // Update review information
+        updateReviewItems();
+        updateReviewShippingAddress();
+        updateReviewBillingAddress();
+        
+        // Show the modal
+        reviewModal.classList.remove('hidden');
+    });
+    
+    // Close Modal Buttons
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.add('hidden');
+            });
+        });
+    });
+    
+    // Place Order Button
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const confirmOrderBtn = document.querySelector('.confirm-order');
+    const confirmationModal = document.getElementById('confirmationModal');
+    
+    placeOrderBtn.addEventListener('click', function() {
+        if (validateForms()) {
+            // Update review information before showing the modal
+            updateReviewItems();
+            updateReviewShippingAddress();
+            updateReviewBillingAddress();
+            
+            // Show the review modal
+            reviewModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    });
+    
+    // Confirm Order button event listener
+    if (confirmOrderBtn) {
+        confirmOrderBtn.addEventListener('click', async function() {
+            if (validateForms()) {
+                try {
+                    // Disable button to prevent multiple clicks
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    
+                    // Generate sequential order number
+                    const orderNumber = await generateOrderNumber();
+                    
+                    // Get cart data
+                    const cart = loadCartData();
+                    
+                    // Get form data
+                    const shippingData = getShippingFormData();
+                    const billingData = getBillingFormData();
+                    const paymentData = getPaymentFormData();
+                    
+                    // Get total amount
+                    const totalElement = document.querySelector('.total-amount');
+                    const totalText = totalElement ? totalElement.textContent : '₹0.00';
+                    const totalAmount = parseFloat(totalText.replace(/[^0-9.-]+/g,''));
+                    
+                    // Prepare order data for submission
+                    const orderData = {
+                        orderNumber: orderNumber,
+                        email: shippingData.email,
+                        fullName: shippingData.fullName,
+                        phone: shippingData.phone,
+                        addressLine1: shippingData.address1,
+                        addressLine2: shippingData.address2,
+                        city: shippingData.city,
+                        state: shippingData.state,
+                        zipCode: shippingData.zipCode,
+                        country: 'India',
+                        items: cart,
+                        totalAmount: totalAmount,
+                        paymentMethod: paymentData.method
+                    };
+                    
+                    // Submit order to database
+                    try {
+                        // Use the global saveOrderToDatabase function from order-handler.js
+                        if (window.saveOrderToDatabase) {
+                            await window.saveOrderToDatabase(orderData);
+                            console.log('Order stored in database successfully');
+                        } else {
+                            console.error('saveOrderToDatabase function not found');
+                        }
+                    } catch (dbError) {
+                        console.error('Failed to store order in database:', dbError);
+                        // Continue with checkout process even if database storage fails
+                    }
+                    
+                    // Hide review modal
+                    reviewModal.classList.add('hidden');
+                    
+                    // Show confirmation modal
+                    confirmationModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Update order number in confirmation modal
+                    const orderNumberElement = document.querySelector('#confirmationModal strong');
+                    if (orderNumberElement) {
+                        orderNumberElement.textContent = orderNumber;
+                    }
+                    
+                    // Clear the cart after successful order
+                    localStorage.removeItem('auIrphilaCart');
+                    
+                    // Reset button state
+                    this.disabled = false;
+                    this.innerHTML = 'Confirm Order';
+                } catch (error) {
+                    console.error('Error processing order:', error);
+                    alert('There was an error processing your order. Please try again.');
+                    this.disabled = false;
+                    this.innerHTML = 'Confirm Order';
+                }
+            }
+        });
+    } else {
+        console.error('Confirm Order button not found');
+    }
+    
+    // Add event listener for Continue Shopping button
+    const continueShoppingBtn = document.querySelector('#confirmationModal .primary-button');
+    if (continueShoppingBtn) {
+        continueShoppingBtn.addEventListener('click', function() {
+            // Navigate to home page
+            window.location.href = '../index.html';
+        });
+    }
+    
+    function validateForms() {
+        const isShippingValid = validateShippingForm();
+        const isBillingValid = validateBillingForm();
+        const isPaymentValid = validatePaymentForm();
+        
+        if (!isShippingValid) {
+            alert('Please fill in all required shipping fields.');
+            return false;
+        }
+        
+        if (!isBillingValid) {
+            alert('Please fill in all required billing fields.');
+            return false;
+        }
+        
+        if (!isPaymentValid) {
+            alert('Please fill in all required payment fields.');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Helper function to get shipping form data
+    function getShippingFormData() {
+        return {
+            fullName: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address1: document.getElementById('address1').value,
+            address2: document.getElementById('address2').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            zipCode: document.getElementById('zipCode').value
+        };
+    }
+    
+    // Helper function to get billing form data
+    function getBillingFormData() {
+        const sameAsShipping = document.getElementById('sameAsBilling').checked;
+        
+        if (sameAsShipping) {
+            return getShippingFormData();
+        }
+        
+        return {
+            fullName: document.getElementById('billingFullName').value,
+            email: document.getElementById('billingEmail').value,
+            phone: document.getElementById('billingPhone').value,
+            address1: document.getElementById('billingAddress1').value,
+            address2: document.getElementById('billingAddress2').value,
+            city: document.getElementById('billingCity').value,
+            state: document.getElementById('billingState').value,
+            zipCode: document.getElementById('billingZipCode').value
+        };
+    }
+    
+    // Helper function to get payment form data
+    function getPaymentFormData() {
+        const selectedPayment = document.querySelector('.payment-option.selected');
+        const paymentType = selectedPayment ? selectedPayment.getAttribute('data-payment') : 'card';
+        
+        if (paymentType === 'card') {
+            return {
+                method: 'card',
+                cardNumber: document.getElementById('cardNumber').value,
+                cardName: document.getElementById('nameOnCard').value,
+                expiry: document.getElementById('expiryDate').value,
+                cvv: document.getElementById('cvv').value
+            };
+        } else if (paymentType === 'upi') {
+            return {
+                method: 'upi',
+                upiId: document.getElementById('upiId').value
+            };
+        } else {
+            return {
+                method: 'cod'
+            };
+        }
+    }
+    
+    // Add input event listeners to update review in real-time
+    const allInputs = document.querySelectorAll('input, select');
+    allInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const selectedPayment = document.querySelector('.payment-option.selected');
+            const paymentType = selectedPayment.getAttribute('data-payment');
+            
+            updateReviewShippingAddress();
+            updateReviewBillingAddress();
+            updateReviewPaymentMethod(paymentType);
+        });
+    });
+});
+
+    // Load cart data from localStorage
+    function loadCartData() {
+        const savedCart = localStorage.getItem('auIrphilaCart');
+        if (savedCart) {
+            return JSON.parse(savedCart);
+        }
+        return [];
+    }
+    
+    // Add this new function to update order summary
+    function updateOrderSummaryFromCart() {
+        const cart = loadCartData();
+        
+        // Calculate subtotal
+        const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        
+        // Set shipping cost (₹200 if cart has items, otherwise 0)
+        const shipping = cart.length > 0 ? 200.00 : 0.00;
+        
+        // Calculate tax (5% of subtotal)
+        const tax = subtotal * 0.05;
+        
+        // Calculate total
+        const total = subtotal + shipping + tax;
+        
+        // Update the checkout page with the cart totals
+        const subtotalElement = document.querySelector('.subtotal-amount');
+        const taxElement = document.querySelector('.totals-row.tax span:last-child');
+        const shippingElement = document.querySelector('.totals-row.shipping span:last-child');
+        const totalElement = document.querySelector('.total-amount');
+        
+        if (subtotalElement) subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+        if (taxElement) taxElement.textContent = `₹${tax.toFixed(2)}`;
+        if (shippingElement) shippingElement.textContent = `₹${shipping.toFixed(2)}`;
+        if (totalElement) totalElement.textContent = `₹${total.toFixed(2)}`;
+        
+        // Also update the review section if it exists
+        const reviewSubtotal = document.getElementById('review-subtotal');
+        const reviewTax = document.getElementById('review-tax');
+        const reviewShipping = document.getElementById('review-shipping');
+        const reviewTotal = document.getElementById('review-total');
+        
+        if (reviewSubtotal) reviewSubtotal.textContent = `₹${subtotal.toFixed(2)}`;
+        if (reviewTax) reviewTax.textContent = `₹${tax.toFixed(2)}`;
+        if (reviewShipping) reviewShipping.textContent = `₹${shipping.toFixed(2)}`;
+        if (reviewTotal) reviewTotal.textContent = `₹${total.toFixed(2)}`;
+    }
+
+    // Add this function to update the review items section
+    function updateReviewItems() {
+        const cart = loadCartData();
+        const reviewItemsSection = document.querySelector('.review-section:first-child');
+        
+        if (!reviewItemsSection) {
+            console.error('Review items section not found');
+            return;
+        }
+        
+        // Create items text
+        let itemsText = '';
+        if (cart.length > 0) {
+            itemsText = cart.map(item => `${item.name} (${item.quantity})`).join(', ');
+        } else {
+            itemsText = 'No items in cart';
+        }
+        
+        // Get total from order summary
+        const totalElement = document.querySelector('.total-amount');
+        const totalText = totalElement ? totalElement.textContent : '₹0.00';
+        
+        // Update the review section
+        reviewItemsSection.innerHTML = `
+            <h3>Items</h3>
+            <p>${itemsText}</p>
+            <p><strong>Total:</strong> ${totalText}</p>
+        `;
+    }
+
+    // Modify the existing DOMContentLoaded event listener
+    document.addEventListener('DOMContentLoaded', function() {
+        // ... existing code ...
+        
+        // Call the update function when the page loads
+        updateOrderSummaryFromCart();
+        
+        // Add event listener for storage changes to update in real-time
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'auIrphilaCart') {
+                updateOrderSummaryFromCart();
+            }
+        });
+    });
+
+    // Populate order summary with cart items
+    function populateOrderSummary() {
+        const cart = loadCartData();
+        const orderItemsContainer = document.querySelector('.order-items');
+        
+        if (!orderItemsContainer) {
+            console.error('Order items container not found');
+            return;
+        }
+        
+        if (cart.length === 0) {
+            // Show empty cart message
+            orderItemsContainer.innerHTML = '<p class="empty-cart-message">Your cart is empty</p>';
+            updateOrderSummaryFromCart(); // Still update totals to show zeros
+            return;
+        }
+        
+        // Clear existing items
+        orderItemsContainer.innerHTML = '';
+        
+        // Add each cart item to the order summary
+        cart.forEach(item => {
+            const itemTotal = (item.price * item.quantity).toFixed(2);
+            
+            // Get appropriate icon based on product category
+            let iconClass = getProductIcon(item.name);
+            
+            const itemElement = document.createElement('div');
+            itemElement.className = 'order-item';
+            itemElement.innerHTML = `
+                <div class="item-icon">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="item-details">
+                    <h3>${item.name}</h3>
+                    <p class="item-price">₹${item.price.toFixed(2)} x ${item.quantity}</p>
+                </div>
+                <div class="item-total">₹${itemTotal}</div>
+            `;
+            
+            orderItemsContainer.appendChild(itemElement);
+        });
+        
+        // Update totals
+        updateOrderSummaryFromCart();
+    }
+    
+    // Helper function to determine icon based on product name
+    function getProductIcon(productName) {
+        const productName_lower = productName.toLowerCase();
+        
+        if (productName_lower.includes('coffee') || productName_lower.includes('latte') || productName_lower.includes('chai')) {
+            return 'fas fa-mug-hot';
+        } else if (productName_lower.includes('cake')) {
+            return 'fas fa-birthday-cake';
+        } else if (productName_lower.includes('bread')) {
+            return 'fas fa-bread-slice';
+        } else if (productName_lower.includes('cookie')) {
+            return 'fas fa-cookie';
+        } else if (productName_lower.includes('muffin')) {
+            return 'fas fa-cookie';
+        } else if (productName_lower.includes('chocolate')) {
+            return 'fas fa-candy-cane';
+        } else if (productName_lower.includes('gift') || productName_lower.includes('hamper')) {
+            return 'fas fa-gift';
+        } else {
+            return 'fas fa-utensils';
+        }
+    }
+    
+    // Call the function to populate order summary
+    populateOrderSummary();

@@ -1,3 +1,19 @@
+import { generateOrderNumber } from './order-utils.js';
+import { sendOrderConfirmationEmail } from './email-service.js';
+import { supabase } from './supabase.js'; // Import from the same directory
+
+async function requireLogin() {
+    // Check if user is logged in
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        // Not logged in, redirect to login page
+        window.location.href = '/pages/login.html'; // adjust path as needed
+    }
+}
+
+// Call this function on every page except login/signup
+requireLogin();
+
 document.addEventListener('DOMContentLoaded', function() {
     // Toggle Billing Address Section
     const sameAsBillingCheckbox = document.getElementById('sameAsBilling');
@@ -375,24 +391,143 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmOrderBtn = document.querySelector('.confirm-order');
     const confirmationModal = document.getElementById('confirmationModal');
     
-    placeOrderBtn.addEventListener('click', function() {
+    if (!confirmationModal) {
+        console.error('Confirmation modal not found');
+    }
+    
+    placeOrderBtn.addEventListener('click', async function() {
         if (validateForms()) {
+            // Update review information before showing the modal
+            updateReviewItems();
+            updateReviewShippingAddress();
+            updateReviewBillingAddress();
+            
+            // Show the review modal
             reviewModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
     });
     
-    // Add this inside the existing event listener for the confirm order button
-    confirmOrderBtn.addEventListener('click', function() {
-        if (validateForms()) {
-            // Hide review modal
-            reviewModal.classList.add('hidden');
-            // Show confirmation modal
-            confirmationModal.classList.remove('hidden');
-            
-            // Clear the cart after successful order
-            localStorage.removeItem('auIrphilaCart');
-        }
-    });
+    // Confirm Order button event listener
+    if (confirmOrderBtn) {
+        confirmOrderBtn.addEventListener('click', async function() {
+            if (validateForms()) {
+                try {
+                    // Disable button to prevent multiple clicks
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    
+                    // Generate sequential order number
+                    const orderNumber = await generateOrderNumber();
+                    
+                    // Get cart data
+                    const cart = JSON.parse(localStorage.getItem('auIrphilaCart') || '[]');
+                    
+                    // Get form data
+                    const shippingData = getShippingFormData();
+                    const billingData = getBillingFormData();
+                    const paymentData = getPaymentFormData();
+                    
+                    // Get total amount
+                    const totalElement = document.querySelector('.total-amount');
+                    const totalText = totalElement ? totalElement.textContent : '₹0.00';
+                    const totalAmount = parseFloat(totalText.replace(/[^0-9.-]+/g,''));
+                    
+                    // Prepare order data for submission
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!user) {
+                        alert('You must be logged in to place an order!');
+                        return;
+                    }
+                    const formattedOrder = {
+                        user_id: user.id,
+                        orderNumber: orderNumber,
+                        email: shippingData.email,
+                        fullName: shippingData.fullName,
+                        phone: shippingData.phone,
+                        addressLine1: shippingData.address1,
+                        addressLine2: shippingData.address2 || '',
+                        city: shippingData.city,
+                        state: shippingData.state,
+                        zipCode: shippingData.zipCode,
+                        country: 'India',
+                        items: cart,
+                        totalAmount: totalAmount,
+                        paymentMethod: paymentData.method,
+                        shippingCost: 200.00 // Add shipping cost for email template
+                    };
+                    
+                    console.log('Submitting order with data:', formattedOrder);
+                    
+                    // Submit order to database using backend API
+                    try {
+                        console.log('Attempting to save order to database...');
+                        const result = await window.saveOrderToDatabase(formattedOrder);
+                        console.log('Order saved to database:', result);
+
+                        // Update order number with the one from database
+                        formattedOrder.orderNumber = result.order_display_id || formattedOrder.orderNumber;
+
+                        // Hide review modal
+                        if (reviewModal) reviewModal.classList.add('hidden');
+
+                        // Show confirmation modal
+                        if (confirmationModal) {
+                            confirmationModal.classList.remove('hidden');
+                            document.body.style.overflow = 'hidden';
+                            // Update order number in confirmation modal
+                            const orderNumberElement = confirmationModal.querySelector('strong');
+                            if (orderNumberElement) {
+                                orderNumberElement.textContent = formattedOrder.orderNumber;
+                            }
+                        }
+
+                        // Send order confirmation email with complete order details
+                        try {
+                            console.log('Sending order confirmation email...');
+                            await fetch('/api/confirm-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    orderNumber: formattedOrder.orderNumber,
+                                    email: formattedOrder.email,
+                                    fullName: formattedOrder.fullName,
+                                    totalAmount: formattedOrder.totalAmount,
+                                    items: formattedOrder.items
+                                })
+                            });
+                            console.log('Order confirmation email sent successfully');
+                        } catch (emailError) {
+                            console.error('Failed to send order confirmation email:', emailError);
+                            alert('Your order was placed successfully, but we couldn\'t send the confirmation email. Please save your order number for reference.');
+                        }
+
+                        // Clear the cart after successful order
+                        localStorage.removeItem('auIrphilaCart');
+
+                    } catch (dbError) {
+                        console.error('Failed to process order:', dbError);
+                        alert('There was an error processing your order. Please try again. Error: ' + (dbError.message || 'Unknown error'));
+                        this.disabled = false;
+                        this.innerHTML = 'Confirm Order';
+                        return;
+                    }
+                    
+                    // Reset button state (in case we need to show it again)
+                    this.disabled = false;
+                    this.innerHTML = 'Confirm Order';
+                    
+                } catch (error) {
+                    console.error('Error processing order:', error);
+                    alert('There was an error processing your order. Please try again. Error: ' + (error.message || 'Unknown error'));
+                    this.disabled = false;
+                    this.innerHTML = 'Confirm Order';
+                }
+            }
+        });
+    } else {
+        console.error('Confirm Order button not found');
+    }
     
     // Add event listener for Continue Shopping button
     const continueShoppingBtn = document.querySelector('#confirmationModal .primary-button');
@@ -426,6 +561,65 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
     
+    // Helper function to get shipping form data
+    function getShippingFormData() {
+        return {
+            fullName: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address1: document.getElementById('address1').value,
+            address2: document.getElementById('address2').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            zipCode: document.getElementById('zipCode').value
+        };
+    }
+    
+    // Helper function to get billing form data
+    function getBillingFormData() {
+        const sameAsShipping = document.getElementById('sameAsBilling').checked;
+        
+        if (sameAsShipping) {
+            return getShippingFormData();
+        }
+        
+        return {
+            fullName: document.getElementById('billingFullName').value,
+            email: document.getElementById('billingEmail').value,
+            phone: document.getElementById('billingPhone').value,
+            address1: document.getElementById('billingAddress1').value,
+            address2: document.getElementById('billingAddress2').value,
+            city: document.getElementById('billingCity').value,
+            state: document.getElementById('billingState').value,
+            zipCode: document.getElementById('billingZipCode').value
+        };
+    }
+    
+    // Helper function to get payment form data
+    function getPaymentFormData() {
+        const selectedPayment = document.querySelector('.payment-option.selected');
+        const paymentType = selectedPayment ? selectedPayment.getAttribute('data-payment') : 'card';
+        
+        if (paymentType === 'card') {
+            return {
+                method: 'card',
+                cardNumber: document.getElementById('cardNumber').value,
+                cardName: document.getElementById('nameOnCard').value,
+                expiry: document.getElementById('expiryDate').value,
+                cvv: document.getElementById('cvv').value
+            };
+        } else if (paymentType === 'upi') {
+            return {
+                method: 'upi',
+                upiId: document.getElementById('upiId').value
+            };
+        } else {
+            return {
+                method: 'cod'
+            };
+        }
+    }
+    
     // Add input event listeners to update review in real-time
     const allInputs = document.querySelectorAll('input, select');
     allInputs.forEach(input => {
@@ -438,7 +632,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updateReviewPaymentMethod(paymentType);
         });
     });
-});
 
     // Load cart data from localStorage
     function loadCartData() {
@@ -451,7 +644,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add this new function to update order summary
     function updateOrderSummaryFromCart() {
-        const cart = loadCartData();
+        const cart = JSON.parse(localStorage.getItem('auIrphilaCart') || '[]');
         
         // Calculate subtotal
         const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -490,7 +683,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add this function to update the review items section
     function updateReviewItems() {
-        const cart = loadCartData();
+        const cart = JSON.parse(localStorage.getItem('auIrphilaCart') || '[]');
         const reviewItemsSection = document.querySelector('.review-section:first-child');
         
         if (!reviewItemsSection) {
@@ -535,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Populate order summary with cart items
     function populateOrderSummary() {
-        const cart = loadCartData();
+        const cart = JSON.parse(localStorage.getItem('auIrphilaCart') || '[]');
         const orderItemsContainer = document.querySelector('.order-items');
         
         if (!orderItemsContainer) {
@@ -603,5 +796,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Function to send order confirmation email via backend Nodemailer API
+    async function sendOrderConfirmationEmail(orderData) {
+        try {
+            console.log('Sending order confirmation email to:', orderData.email);
+            
+            // Call the backend API that uses Nodemailer
+            const response = await fetch('/api/confirm-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: orderData.email,
+                    orderNumber: orderData.orderNumber,
+                    fullName: orderData.fullName,
+                    totalAmount: orderData.totalAmount.toFixed(2),
+                    orderDate: new Date().toLocaleDateString(),
+                    items: orderData.items.map(item => ({
+                        name: item.name,
+                        quantity: item.quantity,
+                        price: (item.price * item.quantity).toFixed(2)
+                    }))
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API responded with status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log('Email sent successfully via backend:', result);
+            return { success: true, message: 'Email sent successfully' };
+        } catch (error) {
+            console.error('Error sending order confirmation email:', error);
+            // Don't throw the error, just log it and continue
+            return { success: false, message: 'Failed to send email', error };
+        }
+    }
+    
     // Call the function to populate order summary
     populateOrderSummary();
+});

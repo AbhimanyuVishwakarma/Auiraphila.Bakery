@@ -1,0 +1,24 @@
+{
+  "name": "auiraphila.bakery",
+  "version": "1.0.0",
+  "description": "This repository contains the website for Auiraphila Bakery.",
+  "main": "add_auth_to_pages.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbhimanyuVishwakarma/Auiraphila.Bakery.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AbhimanyuVishwakarma/Auiraphila.Bakery/issues"
+  },
+  "homepage": "https://github.com/AbhimanyuVishwakarma/Auiraphila.Bakery#readme",
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "nodemailer": "^7.0.4"
+  }
+}

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings - AuIrphila Bakery</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e67e22;
+            --secondary-color: #e74c3c;
+            --accent-color: #f1c40f;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --border-radius: 15px;
+        }
+
+        /* Settings specific styles */
+        .settings-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            background: #f9f9f9;
+            flex-wrap: wrap;
+        }
+
+        .settings-tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .settings-tab i {
+            margin-right: 8px;
+        }
+
+        .settings-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: white;
+        }
+
+        .settings-tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        .settings-content {
+            padding: 25px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .settings-content.active {
+            display: block;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .settings-section h3 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
+        }
+
+        .form-text {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .form-col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 250px;
+        }
+
+        .btn-save {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background-color: #f1f1f1;
+            color: #555;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-reset:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .setting-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .setting-card h4 {
+            margin-top: 0;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .color-option.active {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        /* Success and Error Messages */
+        .success-message, .error-message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .success-message i, .error-message i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .settings-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+            
+            .settings-tab {
+                white-space: nowrap;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-col {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .settings-tab {
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+            
+            .settings-content {
+                padding: 15px;
+            }
+            
+            .btn-save, .btn-reset {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Protection -->
+    <div class="admin-login-protection" id="adminLoginProtection">
+        <div class="admin-login-form">
+            <h2>Admin Access</h2>
+            <div class="error-message" id="adminLoginError"></div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <input type="email" id="adminEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <a href="../index.html" class="back-link">← Back to Website</a>
+        </div>
+    </div>
+
+    <div class="admin-container" id="adminDashboard" style="display: none;">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="admin-logo">
+                <h2>AuIrphila Admin</h2>
+            </div>
+            <ul class="admin-nav">
+                <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-bread-slice"></i> Products</a></li>
+                <li class="active"><a href="admin-settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="admin-user">
+                <div class="admin-user-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="admin-user-info">
+                    <h4>Admin</h4>
+                    <p>Super Admin</p>
+                </div>
+                <a href="#" id="adminLogout" class="logout-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-content">
+            <div class="admin-header">
+                <h1><i class="fas fa-cog"></i> Settings</h1>
+                <div class="admin-actions">
+                    <button id="saveAllSettings" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save All Changes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div class="success-message" id="successMessage" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText"></span>
+            </div>
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+
+            <div class="settings-container">
+                <!-- Tabs Navigation -->
+                <div class="settings-tabs" id="settingsTabs">
+                    <div class="settings-tab active" data-tab="general">
+                        <i class="fas fa-store"></i> General
+                    </div>
+                    <div class="settings-tab" data-tab="appearance">
+                        <i class="fas fa-paint-brush"></i> Appearance
+                    </div>
+                    <div class="settings-tab" data-tab="orders">
+                        <i class="fas fa-shopping-bag"></i> Orders
+                    </div>
+                    <div class="settings-tab" data-tab="users">
+                        <i class="fas fa-users"></i> Users
+                    </div>
+                    <div class="settings-tab" data-tab="notifications">
+                        <i class="fas fa-bell"></i> Notifications
+                    </div>
+                    <div class="settings-tab" data-tab="payment">
+                        <i class="fas fa-credit-card"></i> Payment & Tax
+                    </div>
+                    <div class="settings-tab" data-tab="system">
+                        <i class="fas fa-shield-alt"></i> System & Security
+                    </div>
+                </div>
+
+                <!-- General Settings -->
+                <div id="general" class="settings-content active">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-info-circle"></i> Store Information</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="storeName">Store Name</label>
+                                    <input type="text" id="storeName" class="form-control" value="AuIrphila Bakery">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="storeTagline">Tagline</label>
+                                    <input type="text" id="storeTagline" class="form-control" value="Freshly Baked Goodness">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeDescription">Store Description</label>
+                            <textarea id="storeDescription" class="form-control" rows="3">AuIrphila Bakery offers freshly baked goods made with premium ingredients. From artisan breads to delectable pastries, we bring quality baked products to your table.</textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="storeEmail">Email Address</label>
+                                    <input type="email" id="storeEmail" class="form-control" value="contact@auirphilabakery.com">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="storePhone">Phone Number</label>
+                                    <input type="tel" id="storePhone" class="form-control" value="+1 (555) 123-4567">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="storeAddress">Address</label>
+                            <textarea id="storeAddress" class="form-control" rows="2">123 Bakery Street, Flour City, FC 12345</textarea>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-clock"></i> Business Hours</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label>Monday - Friday</label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="time" class="form-control" value="08:00">
+                                        <span>to</span>
+                                        <input type="time" class="form-control" value="18:00">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label>Saturday - Sunday</label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="time" class="form-control" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" class="form-control" value="16:00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Special Hours/Holidays</label>
+                            <textarea class="form-control" rows="2" placeholder="E.g., Closed on Christmas Day, New Year's Day, etc.">Closed on major holidays. Special hours on Christmas Eve (8:00 - 14:00)</textarea>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-globe"></i> Localization</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="currency">Currency</label>
+                                    <select id="currency" class="form-control">
+                                        <option value="USD" selected>USD - US Dollar ($)</option>
+                                        <option value="EUR">EUR - Euro (€)</option>
+                                        <option value="GBP">GBP - British Pound (£)</option>
+                                        <option value="CAD">CAD - Canadian Dollar (C$)</option>
+                                        <option value="AUD">AUD - Australian Dollar (A$)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="dateFormat">Date Format</label>
+                                    <select id="dateFormat" class="form-control">
+                                        <option value="MM/DD/YYYY" selected>MM/DD/YYYY</option>
+                                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="timezone">Timezone</label>
+                                    <select id="timezone" class="form-control">
+                                        <option value="America/New_York" selected>Eastern Time (ET)</option>
+                                        <option value="America/Chicago">Central Time (CT)</option>
+                                        <option value="America/Denver">Mountain Time (MT)</option>
+                                        <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                        <option value="Europe/London">Greenwich Mean Time (GMT)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="weightUnit">Weight Unit</label>
+                                    <select id="weightUnit" class="form-control">
+                                        <option value="oz" selected>Ounces (oz)</option>
+                                        <option value="g">Grams (g)</option>
+                                        <option value="lb">Pounds (lb)</option>
+                                        <option value="kg">Kilograms (kg)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="text-align: right;">
+                        <button type="button" class="btn-reset">Reset</button>
+                        <button type="button" class="btn-save">Save Changes</button>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div id="appearance" class="settings-content">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-palette"></i> Theme Settings</h3>
+                        <div class="form-group">
+                            <label>Primary Color</label>
+                            <div class="color-picker">
+                                <div class="color-option active" style="background-color: #e67e22;" data-color="#e67e22"></div>
+                                <div class="color-option" style="background-color: #3498db;" data-color="#3498db"></div>
+                                <div class="color-option" style="background-color: #2ecc71;" data-color="#2ecc71"></div>
+                                <div class="color-option" style="background-color: #9b59b6;" data-color="#9b59b6"></div>
+                                <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Secondary Color</label>
+                            <div class="color-picker">
+                                <div class="color-option active" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
+                                <div class="color-option" style="background-color: #2980b9;" data-color="#2980b9"></div>
+                                <div class="color-option" style="background-color: #27ae60;" data-color="#27ae60"></div>
+                                <div class="color-option" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
+                                <div class="color-option" style="background-color: #d35400;" data-color="#d35400"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fontFamily">Font Family</label>
+                            <select id="fontFamily" class="form-control">
+                                <option value="Poppins" selected>Poppins</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Open Sans">Open Sans</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Lato">Lato</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-home"></i> Homepage Layout</h3>
+                        <div class="form-group">
+                            <label>Featured Section</label>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <select class="form-control">
+                                        <option value="hero" selected>Hero Banner</option>
+                                        <option value="products">Featured Products</option>
+                                        <option value="categories">Product Categories</option>
+                                        <option value="testimonials">Customer Testimonials</option>
+                                    </select>
+                                </div>
+                                <div class="form-col">
+                                    <div style="display: flex; align-items: center; height: 100%;">
+                                        <label class="switch" style="margin: 0;">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span style="margin-left: 10px;">Enabled</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Banner Settings</label>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <input type="text" class="form-control" placeholder="Banner Heading" value="Fresh Baked Goods Daily">
+                                </div>
+                                <div class="form-col">
+                                    <input type="text" class="form-control" placeholder="Banner Subheading" value="Artisan breads and pastries made with love">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label>Banner Image</label>
+                                <input type="file" class="form-control" accept="image/*">
+                                <div class="form-text">Recommended size: 1920x800px</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-th-large"></i> Content Display</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label>Products Per Page</label>
+                                    <input type="number" class="form-control" value="12" min="4" max="48">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label>Default Product Sort</label>
+                                    <select class="form-control">
+                                        <option value="newest">Newest First</option>
+                                        <option value="popular" selected>Most Popular</option>
+                                        <option value="price-low">Price: Low to High</option>
+                                        <option value="price-high">Price: High to Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="text-align: right;">
+                        <button type="button" class="btn-reset">Reset</button>
+                        <button type="button" class="btn-save">Save Changes</button>
+                    </div>
+                </div>
